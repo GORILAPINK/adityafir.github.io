@@ -482,47 +482,80 @@
             <p>© 2025 Aditya Firmansyah. All Rights Reserved.</p>
         </footer>
     </div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
 
-    <script>
-        /* Toggle Sidebar */
-        let sidebar = document.getElementById('mySidebar');
-        let sidebarOpen = false;
-        
-        // Close sidebar by default on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            sidebar.classList.add('closed');
-        });
+    /* =========================
+       SIDEBAR LOGIC (IMPROVED)
+    ========================== */
 
-        function toggleNav() {
-            if (sidebarOpen) {
-                sidebar.classList.add('closed');
-                sidebarOpen = false;
-            } else {
-                sidebar.classList.remove('closed');
-                sidebarOpen = true;
-            }
+    const sidebar = document.getElementById("mySidebar");
+    const toggleButton = document.querySelector(".openbtn");
+
+    // Sidebar tertutup saat load
+    sidebar.classList.add("closed");
+
+    toggleButton.addEventListener("click", function (e) {
+        e.stopPropagation();
+        sidebar.classList.toggle("closed");
+    });
+
+    // Klik di luar sidebar → otomatis tutup
+    document.addEventListener("click", function (event) {
+        if (!sidebar.contains(event.target) && 
+            !toggleButton.contains(event.target)) {
+            sidebar.classList.add("closed");
         }
+    });
 
-        // Close sidebar when clicking outside
-        document.addEventListener('click', function(event) {
-            const isClickInsideSidebar = sidebar.contains(event.target);
-            const isClickOnButton = event.target.closest('.openbtn');
-            
-            if (!isClickInsideSidebar && !isClickOnButton && sidebarOpen) {
-                sidebar.classList.add('closed');
-                sidebarOpen = false;
-            }
-        });
+    /* =========================
+       SLIDER LOGIC (IMPROVED)
+    ========================== */
 
-        /* Slider */
-        const slides = document.getElementById('slides');
-        let index = 0;
-        function updateSlide() { slides.style.transform = `translateX(-${index * 100}%)`; }
-        function nextSlide() { index++; if (index >= slides.children.length) index = 0; updateSlide(); }
-        function prevSlide() { index--; if (index < 0) index = slides.children.length - 1; updateSlide(); }
-        setInterval(nextSlide, 4000);
-    </script>
+    const slides = document.getElementById("slides");
+    const totalSlides = slides.children.length;
+    let index = 0;
+    let autoSlide;
 
+    function updateSlide() {
+        slides.style.transform = `translateX(-${index * 100}%)`;
+    }
+
+    function nextSlide() {
+        index = (index + 1) % totalSlides;
+        updateSlide();
+    }
+
+    function prevSlide() {
+        index = (index - 1 + totalSlides) % totalSlides;
+        updateSlide();
+    }
+
+    // Auto slide
+    function startAutoSlide() {
+        autoSlide = setInterval(nextSlide, 4000);
+    }
+
+    function resetAutoSlide() {
+        clearInterval(autoSlide);
+        startAutoSlide();
+    }
+
+    // Tombol panah
+    document.querySelector(".arrow-left").addEventListener("click", function () {
+        prevSlide();
+        resetAutoSlide();
+    });
+
+    document.querySelector(".arrow-right").addEventListener("click", function () {
+        nextSlide();
+        resetAutoSlide();
+    });
+
+    startAutoSlide();
+
+});
+</script>
 </body>
 
-</html>
+</html>>
